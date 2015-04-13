@@ -137,7 +137,13 @@ function Write-Log {
 
 		[switch]
 		# If specified return the messages array
-		$pipeline
+		$pipeline,
+
+		[string]
+		# Provide a hint to the function as to which module this command came from
+		# this is to help with finding the correct module when functions of the same name
+		# exist in different modules
+		$module = [String]::Empty
 
 	)
 
@@ -156,19 +162,23 @@ function Write-Log {
 			# determine the name of the function that called write-log
 			$calling_function = [System.IO.Path]::GetFileNameWithoutExtension($MyInvocation.ScriptName)
 
-			# determine the module that called Write-Log and then get the $logging settings	
-			$calling_module = $script:Logging.keys | Where-Object { $script:Logging.$_.functions -icontains $calling_function }
-		
+			# determine the module that called Write-Log and then get the $logging settings
+			if ([String]::IsNullOrEmpty($module)) {
+				$calling_module = $script:Logging.keys | Where-Object { $script:Logging.$_.functions -icontains $calling_function }
+			} else {
+				$calling_module = $module
+			}
+
 		}
 
 		Write-Verbose "Calling module: '$calling_module' ($($MyInvocation.ScriptName)"
 
 		if (![String]::IsNullOrEmpty($calling_module) -and $Script:Logging.containskey($calling_module)) {
-			
+
 			$Logging = $script:Logging.$calling_module
 
 		} else {
-			
+
 			# get a local variable of the module scope variable 'Logging'
 			$Logging = $script:Logging
 
@@ -184,7 +194,7 @@ function Write-Log {
 		$default_fgcolour = "white"
 		$default_bgcolour = "black"
 		$event_type = "Information"
-		
+
 		# if explicit logtargets have been set, use them rather than the module-level or default ones
 		if ($targets[0] -eq "undefined") {
 			if (![String]::IsNullOrEmpty($Logging.targets)) {
@@ -251,14 +261,14 @@ function Write-Log {
 					[xml] $help_resource = (Get-Content -Path $help_resource) -join "`n"
 				}
 			}
-			
+
 			# Check that the resource that has been loaded is an XML document
 			if ($help_resource -is [XML.XMLDocument]) {
 
 				# get the message item from the xml document based on the XPath
 				$xpath = "//resource[@code='{0}']" -f $eventid
 				$item = $help_resource.SelectSingleNode($xpath)
-				
+
 				# set properties, but only if they have not been set by parametrers to the function
 				# message
 				if ([String]::IsNullOrEmpty($message)) {
@@ -370,7 +380,7 @@ function Write-Log {
 	}
 
 	Process {
-	
+
 		# Determine if the message string has any placeholders in it, that need to be replaced by information
 		# in the extra parameter
 		if ($extra -ne $false) {
@@ -398,7 +408,7 @@ function Write-Log {
 			}
 
 		}
-		
+
 		# Set information in the message structure object
 		$message_structure.message.text = $message
 
@@ -450,7 +460,7 @@ function Write-Log {
 							$splat.$param = $providerParameters.$param
 						}
 					}
-					
+
 					# now invoke the provider by splatting the function
 					"Set-Message @splat" | Invoke-Expression
 				}

@@ -146,7 +146,11 @@ function Write-Log {
 
 		[switch]
 		# If specified, the input object will be rendered as JSON
-		$asJson
+		$asJson,
+
+		[int]
+		# The depth to which objects will be traversed when rendering as JSON
+		$jsonDepth = 2
 
 	)
 
@@ -414,7 +418,7 @@ function Write-Log {
 
 		# Set information in the message structure object
 		if ($asJson) {
-			$message_structure.message.text = ($message | Format-Json)
+			$message_structure.message.text = ($message | Format-Json -Depth $jsonDepth)
 		} else {
 			$message_structure.message.text = $message
 		}

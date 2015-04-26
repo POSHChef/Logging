@@ -19,13 +19,10 @@ limitations under the License.
 
 function _loadType($dllPath)
 {
-    if (Test-Path $dllPath)
-    {
+    if (Test-Path $dllPath) {
         $assemblyBytes = [System.IO.File]::ReadAllBytes($dllPath);
         $assemblyLoaded = [System.Reflection.Assembly]::Load($assemblyBytes);
-    }
-    else
-    {
+    } else {
         throw "Could not find the assembly: $dllPath"
     }
 }

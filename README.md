@@ -22,3 +22,9 @@ Note:  This is currently the location for the module, but it may change in the f
 ## More Information
 
 Please refer to the [Wiki](http://github.com/POSHChef/Logging/wiki) for more detailed installation information and further information.
+
+## Acknowledgements
+
+This project makes use of the following open source projects:
+
+- [Json Pretty Printer](http://www.markdavidrogers.com/json-pretty-printerbeautifier-library-for-net/)

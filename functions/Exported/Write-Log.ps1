@@ -143,7 +143,15 @@ function Write-Log {
 		# Provide a hint to the function as to which module this command came from
 		# this is to help with finding the correct module when functions of the same name
 		# exist in different modules
-		$module = [String]::Empty
+		$module = [String]::Empty,
+
+		[switch]
+		# If specified, the input object will be rendered as JSON
+		$asJson,
+
+		[int]
+		# The depth to which objects will be traversed when rendering as JSON
+		$jsonDepth = 2
 
 	)
 
@@ -410,7 +418,11 @@ function Write-Log {
 		}
 
 		# Set information in the message structure object
-		$message_structure.message.text = $message
+		if ($asJson) {
+			$message_structure.message.text = ($message | Format-Json -Depth $jsonDepth)
+		} else {
+			$message_structure.message.text = $message
+		}
 
 		# build up the splat hash to send to the provider function
 		$parameters = @{

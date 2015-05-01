@@ -52,10 +52,9 @@ function Write-Log {
 
 		[Parameter(ValueFromPipeline=$true, Position=0)]
 		[AllowNull()]
-		[string]
 		# The message that should be sent to the logging provider
 		# This will override any message that has been supplied by the eventid
-		$message = [String]::Empty,
+		$message,
 
 		[ValidateSet("Error", "Warn", "Progress", "Info", "Verbose", "Debug")]
 		[alias("messagetype")]
@@ -199,8 +198,6 @@ function Write-Log {
 
 		# Define function variables
 		$indent_string = "    "
-		$default_fgcolour = "white"
-		$default_bgcolour = "black"
 		$event_type = "Information"
 
 		# if explicit logtargets have been set, use them rather than the module-level or default ones
@@ -361,11 +358,6 @@ function Write-Log {
 
 		if ($colourConfig.ContainsKey($logLevel) -and $colourConfig[$logLevel].bgColour -and [String]::IsNullOrEmpty($bgColour)) {
 			$bgColour = $colourConfig[$logLevel].bgColour
-		}
-
-		# finally check the bgdolour, if it has not been set then set to the default
-		if ($bgcolour -eq $null) {
-			$bgcolour = $default_bgcolour
 		}
 
 		# get a list of the providers from the local providers path

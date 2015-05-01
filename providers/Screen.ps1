@@ -47,11 +47,11 @@ function Set-Message {
 
 		[string]
 		# the foreground colour for the text
-		$fgcolour,
+		$fgcolour = "white",
 
 		[string]
 		# the background colour for the text
-		$bgcolour,
+		$bgcolour = "black",
 
 		[String[]]
 		# string array of consoles that support colour
@@ -110,20 +110,26 @@ function Set-Message {
 	#if ($consoles -icontains $Host.Name) {
 	if ($Host.UI.ToString() -eq "System.Management.Automation.Internal.Host.InternalHostUserInterface") {
 
-		# get the current fore and background colours so they can be used as defaults
-		$current = @{}
-		$current.foreground = $Host.UI.RawUI.ForegroundColor
-		$current.background = $Host.UI.RawUI.BackgroundColor
+        # do not try to get the current background and foreground colours for ISE
+        # this is because this will return -1
+        if ($host.name -notmatch "ISE") {
 
-		# set the colours if they have been specified in the function
-		# otherwise use the current colours
-		if ($fgcolour -eq $false) {
-			$fgcolour = $current.foreground
-		}
+			    # get the current fore and background colours so they can be used as defaults
+			    $current = @{}
+			    $current.foreground = $Host.UI.RawUI.ForegroundColor
+			    $current.background = $Host.UI.RawUI.BackgroundColor
 
-		if ($bgcolour -eq $false) {
-			$bgcolour = $current.background
-		}
+			    # set the colours if they have been specified in the function
+			    # otherwise use the current colours
+			    if ($fgcolour -eq $false -or [String]::IsNullOrEmpty($fgcolour)) {
+				    $fgcolour = $current.foreground
+			    }
+
+			    if ($bgcolour -eq $false -or [String]::IsNullOrEmpty($bgcolour)) {
+				    $bgcolour = $current.background
+			    }
+
+        }
 
 		# use the write-host function to output the message
 		Write-Host -ForegroundColor $fgcolour -BackgroundColor $bgcolour -NoNewline:$nonewline $message

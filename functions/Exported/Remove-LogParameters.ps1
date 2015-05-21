@@ -24,5 +24,5 @@ function Remove-LogParameters {
 
 	#>
 
-	$Logging = @{}
+	$script:Logging = @{}
 }

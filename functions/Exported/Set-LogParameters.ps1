@@ -96,7 +96,7 @@ function Set-LogParameters {
 			if (![String]::IsNullOrEmpty($targets)) {
 				$local_logging.targets = $targets
 			}
-	
+
 			# Set additional providers
 			# If any have been specified then override those in the loggin variable
 			if (![String]::IsNullOrEmpty($providers)) {
@@ -133,6 +133,13 @@ function Set-LogParameters {
 
 	}
 
+	# If the Logging session does not have a module key add it now
+	if (!$local_logging.containskey("module")) {
+	  $local_logging.module = @{
+	    path = $PSScriptRoot
+	  }
+	}
+
 	# Add an array that will hold any messages that are passed to the module
 	# so that they can be output as part of a pipeline at the end
 	$script:Logging.messages = @()
@@ -143,9 +150,9 @@ function Set-LogParameters {
 		$script:Logging = $local_logging
 		$script:Logging.module_settings = $false
 	} else {
-	
+
 		Write-Verbose "Adding module specific settings: $module_name"
-		
+
 		# set the variable up so that it knows modules have set different parameters
 		$script:Logging.module_settings = $true
 
@@ -157,7 +164,7 @@ function Set-LogParameters {
 		if ($script:Logging.$module_name.containskey("functions") -eq $false) {
 			$script:Logging.$module_name.add("functions", @());
 		}
-		
+
 		# set the local function $logging on the logging var for the module
 		$script:Logging.$module_name = $local_logging
 		$script:Logging.$module_name.functions = $module.$module_name

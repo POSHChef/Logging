@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>0.0.0.0</version>
+    <authors>Logging Development Team</authors>
+    <owners>Logging Development Team</owners>
+    <dependencies />
+    <id>Logging</id>
+    <title>Logging</title>
+    <!--<iconUrl></iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A general purpose logging module for Powershell</description>
+    <copyright>Apache License, Version 2.0</copyright>
+  </metadata>
+  <files>
+    <file src="**\*.ps*1" target="content\logging" exclude="build.ps1" />
+    <file src="**\*.dll" target="content\logging" />
+  </files>
+</package>

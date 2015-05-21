@@ -361,7 +361,8 @@ function Write-Log {
 		}
 
 		# get a list of the providers from the local providers path
-		$provider_path = "{0}\..\..\Providers" -f $PSScriptRoot
+		# $provider_path = "{0}\..\..\Providers" -f $PSScriptRoot
+		$provider_path = Join-Path $script:logging.module.path "Providers"
 		$providers = Get-ChildItem -Recurse -Path $provider_path -Include *.ps1
 
 		# if an additional path has been set then add it to the providers array

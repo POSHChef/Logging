@@ -110,24 +110,26 @@ function Set-Message {
 	#if ($consoles -icontains $Host.Name) {
 	if ($Host.UI.ToString() -eq "System.Management.Automation.Internal.Host.InternalHostUserInterface") {
 
-				$current = @{}
+				# set the default colours of the back and foreground
+				$current = @{
+					foreground = "white"
+					background = "black"
+				}
 
         # do not try to get the current background and foreground colours for ISE
         # this is because this will return -1
-        if ($host.name -match "ISE") {
+        if ($host.name -notmatch "ISE") {
 
-          # as ISE uses its own color system the background and foreground will be defaulted
-					$current.foreground = "white"
-					$current.background = "black"
+					# get the current fore and background colours so they can be used as defaults
+          if (![String]::IsNullOrEmpty($Host.UI.RawUI.ForegroundColor)) {
+				  	$current.foreground = $Host.UI.RawUI.ForegroundColor
+          }
 
-        } else {
-
-			    # get the current fore and background colours so they can be used as defaults
-					$current.foreground = $Host.UI.RawUI.ForegroundColor
-			    $current.background = $Host.UI.RawUI.BackgroundColor
+          if (![String]::IsNullOrEmpty($Host.UI.RawUI.BackgroundColor)) {
+			    	$current.background = $Host.UI.RawUI.BackgroundColor
+          }
 
         }
-
 
 		    # set the colours if they have been specified in the function
 		    # otherwise use the current colours

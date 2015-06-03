@@ -39,10 +39,10 @@ function Get-ModuleMetadata {
   #>
 
   # Set the name of the module
-  $script:Logging.module.name = $MyInvocation.MyCommand.ModuleName
+  $script:logging_internal.module.name = $MyInvocation.MyCommand.ModuleName
 
   # Work out the path to the PSD1 file and if it exists set the version number
-  $datafile = Join-Path $script:logging.module.path ("{0}.psd1" -f $script:logging.module.name)
+  $datafile = Join-Path $script:logging_internal.module.path ("{0}.psd1" -f $script:logging_internal.module.name)
 
   if (Test-Path -Path $datafile) {
 
@@ -51,15 +51,15 @@ function Get-ModuleMetadata {
 
     # if the version is not null set it
     if (![String]::IsNullOrEMpty($module_data.ModuleVersion)) {
-      $script:Logging.module.version = $module_data.ModuleVersion
+      $script:logging_internal.module.version = $module_data.ModuleVersion
     } else {
-      $script:Logging.module.version = "0.0.0"
+      $script:logging_internal.module.version = "0.0.0"
     }
 
   } else {
 
     # no file can be found so set a default version
-    $script:Logging.module.version = "Not Versioned"
+    $script:logging_internal.module.version = "Not Versioned"
   }
 
 }

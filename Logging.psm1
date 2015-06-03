@@ -36,18 +36,18 @@ Export-ModuleMember -function ( $functions_to_export )
 # Declare variable that will hold the log targets etc when other functions need to use Write-Log
 $Logging = @{}
 
+# Another session variable is to be use which will hold information specific to this module
+$logging_internal = @{
+  module = @{
+    path = $PSScriptRoot
+  }
+}
+
 # Allow consumers to specify their configuration at import time
 # e.g. if they have re-load the module they can restore their original config
 if ($configuration) {
     Write-Verbose "Initialising Logging module with explicit configuration"
     $Logging = $configuration
-}
-
-# If the Logging session does not have a module key add it now
-if (!$logging.containskey("module")) {
-  $Logging.module = @{
-    path = $PSScriptRoot
-  }
 }
 
 # Call Get-ModuleData function to set the module information to be used by the system

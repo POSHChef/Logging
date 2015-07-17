@@ -378,6 +378,10 @@ function Write-Log {
 				Write-Warning -Message ("Path to additional providers cannot be found. ({0})" -f $path)
 			}
 		}
+
+		# Call the function to get extra information from environment variables
+		$fields = Get-FieldsFromEnvironment -envvars $logging.envvars
+
 	}
 
 	Process {
@@ -454,6 +458,7 @@ function Write-Log {
 					$providerParameters = @{}
 					$providerParameters += $parameters
 					$providerParameters += $target
+					$providerParameters += $fields
 
 					# determine the parameters that the provider supports and create a splat hash
 					# with only those keys

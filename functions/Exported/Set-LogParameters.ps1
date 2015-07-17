@@ -68,7 +68,12 @@ function Set-LogParameters {
 
 		[hashtable]
 		# Module that is setting the parameters
-		$module = @{}
+		$module = @{},
+
+		[Parameter(ParameterSetName="switches")]
+		[string[]]
+		# List of environment variables to look at when building up the log message
+		$envvars = @()
 	)
 
 	# determine if the module has been set
@@ -121,6 +126,11 @@ function Set-LogParameters {
 			# Set a user attribute that can be set by parameters
 			if (!($local_logging.ContainsKey("custom")) -and $custom -ne $false) {
 				$local_logging.custom = $custom
+			}
+
+			# set the environment variables
+			if ($envvars.count -gt 0) {
+				$local_logging.envvars = $envvars
 			}
 
 		}

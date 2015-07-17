@@ -380,7 +380,7 @@ function Write-Log {
 		}
 
 		# Call the function to get extra information from environment variables
-		$fields = Get-FieldsFromEnvironment -envvars $logging.envvars
+		$message_fields = Get-FieldsFromEnvironment -envvars $logging.envvars
 
 	}
 
@@ -458,7 +458,7 @@ function Write-Log {
 					$providerParameters = @{}
 					$providerParameters += $parameters
 					$providerParameters += $target
-					$providerParameters += $fields
+					$providerParameters += @{fields = $message_fields}
 
 					# determine the parameters that the provider supports and create a splat hash
 					# with only those keys
